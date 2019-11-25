@@ -1,6 +1,5 @@
 package lesson35.service;
 
-import gromcode.main.lesson31homework.Solution;
 import lesson35.exceptions.AccessException;
 import lesson35.model.Hotel;
 import lesson35.model.UserType;
