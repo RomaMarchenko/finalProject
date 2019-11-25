@@ -1,74 +1,50 @@
 package lesson35.repository;
 
 import lesson35.exceptions.BadRequestException;
-import lesson35.exceptions.InternalServerException;
 import lesson35.model.User;
+import lesson35.model.UserType;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Random;
 
 public class UserRepository {
     //считывание данных - считывание файла
     //обработка данных - маппинг данных
 
-    public static User registerUser(User user) throws Exception {
+    private static User loggedUser;
+
+    public static User getLoggedUser() {
+        return loggedUser;
+    }
+
+    public static User registerUser(User user, String path) throws Exception {
         //save user to db
-        if (checkUserRepository("C:\\Users\\admin\\Desktop\\Gromcode Tests\\Final Project\\UserDb.txt") && checkUserName(user.getUserName())) {
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\admin\\Desktop\\Gromcode Tests\\Final Project\\UserDb.txt", true))) {
+        if (checkUser(user) && checkUserName(user.getUserName(), path)) {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(path, true))) {
                 Random id = new Random();
                 user.setId(Math.abs(id.nextLong()));
-                if (fileIsEmpty("C:\\Users\\admin\\Desktop\\Gromcode Tests\\Final Project\\UserDb.txt")) {
                     bw.append(user.toString());
-                } else {
                     bw.append("\n");
-                    bw.append(user.toString());
-                }
             } catch (IOException e) {
                 System.err.println("Repository does not exist");
             }
         }
-
         return user;
     }
 
-    private static boolean fileIsEmpty(String path) throws IOException {
-        try(BufferedReader br = new BufferedReader(new FileReader(path))) {
-            ArrayList<String> fileContent = new ArrayList<>();
-            String line;
-            while((line = br.readLine()) != null) {
-                fileContent.add(line);
-            }
-            if (fileContent.isEmpty()) {
-                return true;
-            }
+    public static void login(String userName, String password, String path) throws Exception {
+        User user = findUserByName(userName, path);
+        if (password.equals(user.getPassword())) {
+            loggedUser = user;
         }
-        return false;
     }
 
-    private static boolean checkUserRepository(String path) throws Exception {
-        try(BufferedReader br = new BufferedReader(new FileReader(path))) {
-            int lineIndex = 1;
-            String user;
-            while ((user = br.readLine()) != null) {
-                String[] userParameters = user.split(", ");
-                if (userParameters.length != 5) {
-                    throw new InternalServerException("Inappropriate data in user repository at line " + lineIndex);
-                } else if (!userParameters[4].equals("ADMIN") && !userParameters[4].equals("USER"))
-                    throw new InternalServerException("Inappropriate user type in user repository at line " + lineIndex);
-                for (Character ch : userParameters[0].toCharArray()) {
-                    if (!Character.isDigit(ch)) {
-                        throw new InternalServerException("Inappropriate user ID in user repository at line " + lineIndex);
-                    }
-                }
-                lineIndex++;
-            }
-        }
-        return true;
+    public static void logout() {
+        loggedUser = null;
     }
 
-    private static boolean checkUserName(String name) throws Exception {
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\admin\\Desktop\\Gromcode Tests\\Final Project\\UserDb.txt"))) {
+    private static boolean checkUserName(String name, String path) throws Exception {
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String user;
             while ((user = br.readLine()) != null) {
                 String[] userParameters = user.split(", ");
@@ -77,5 +53,33 @@ public class UserRepository {
             }
         }
         return true;
+    }
+
+    private static boolean checkUser(User user) throws BadRequestException {
+        if (user == null || user.getCountry() == null || user.getCountry().isEmpty() || user.getPassword() == null || user.getPassword().isEmpty() || user.getUserName() == null || user.getUserName().isEmpty() || user.getUserType() == null)
+            throw new BadRequestException("All fields of user must be filled, please check your input again");
+        return true;
+    }
+
+    private static User findUserByName(String userName, String path) throws IOException, BadRequestException {
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            String userDraft;
+            while ((userDraft = br.readLine()) != null) {
+                String[] userParameters = userDraft.split(", ");
+                if (userName.equals(userParameters[1])) {
+                    User user = new User();
+                    user.setId(Long.parseLong(userParameters[0]));
+                    user.setUserName(userParameters[1]);
+                    user.setPassword(userParameters[2]);
+                    user.setCountry(userParameters[3]);
+                    if (userParameters[4].equals("USER"))
+                        user.setUserType(UserType.USER);
+                    else user.setUserType(UserType.ADMIN);
+
+                    return user;
+                }
+            }
+        }
+        throw new BadRequestException("User with name " + userName + " was not found");
     }
 }

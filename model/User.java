@@ -17,6 +17,9 @@ public class User {
         this.userType = userType;
     }
 
+    public User() {
+    }
+
     public long getId() {
         return id;
     }
@@ -39,6 +42,22 @@ public class User {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 
     @Override
