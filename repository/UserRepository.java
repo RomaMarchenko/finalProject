@@ -68,10 +68,10 @@ public class UserRepository {
     }
 
     private static ArrayList<User> getUsers(String path) throws BadRequestException {
-        User user = new User();
         ArrayList<User> users = new ArrayList<>();
 
         for (String userDraft : Repository.getObjects(path)) {
+            User user = new User();
             String[] userParameters = userDraft.split(", ");
             user.setId(Long.parseLong(userParameters[0]));
             user.setUserName(userParameters[1]);
