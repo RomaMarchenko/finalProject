@@ -6,6 +6,8 @@ import lesson35.model.UserType;
 import lesson35.repository.HotelRepository;
 import lesson35.repository.UserRepository;
 
+import java.util.ArrayList;
+
 
 public class HotelService {
     public static Hotel addHotel(Hotel hotel, String path) throws Exception {
@@ -26,6 +28,12 @@ public class HotelService {
     public static Hotel findHotelByName(String name, String path) throws Exception {
         if (isUserLoggedIn())
             return HotelRepository.findHotelByName(name, path);
+        else throw new AccessException("You have to be logged in to perform this operation");
+    }
+
+    public static ArrayList<Hotel> findHotelByCity(String city, String path) throws Exception {
+        if (isUserLoggedIn())
+            return HotelRepository.findHotelByCity(city, path);
         else throw new AccessException("You have to be logged in to perform this operation");
     }
 

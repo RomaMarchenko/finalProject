@@ -3,7 +3,6 @@ package lesson35.demo;
 import lesson35.controller.UserController;
 import lesson35.model.User;
 import lesson35.model.UserType;
-import lesson35.repository.UserRepository;
 
 public class DemoUser {
     public static void main(String[] args) throws Exception {

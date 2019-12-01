@@ -21,7 +21,7 @@ public class UserService {
         UserRepository.logout();
     }
 
-    private static boolean checkCountry(String country) throws BadRequestException {
+    private static boolean checkCountry(String country) {
         for (Character ch : country.toCharArray()) {
             if (!Character.isLetter(ch)) {
                 return false;

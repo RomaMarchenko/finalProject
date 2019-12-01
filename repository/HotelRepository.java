@@ -4,6 +4,7 @@ import lesson35.exceptions.BadRequestException;
 import lesson35.model.Hotel;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class HotelRepository {
@@ -24,7 +25,7 @@ public class HotelRepository {
     public static void deleteHotel(long hotelId, String path) {
         try (BufferedReader br = new BufferedReader(new FileReader(path)); BufferedWriter bw = new BufferedWriter(new FileWriter(path, false))) {
             String id = String.valueOf(hotelId);
-            String hotel = "";
+            String hotel;
             StringBuffer hotels = new StringBuffer();
             while ((hotel = br.readLine()) != null) {
                 if (!hotel.contains(id)) {
@@ -35,27 +36,25 @@ public class HotelRepository {
             bw.append(hotels);
         } catch (IOException e) {
             System.err.println("Repository does not exist");
-            ;
         }
     }
 
-    public static Hotel findHotelByName(String name, String path) throws IOException, BadRequestException {
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            String hotelDraft;
-            while ((hotelDraft = br.readLine()) != null) {
-                String[] hotelParameters = hotelDraft.split(", ");
-                if (name.equals(hotelParameters[1])) {
-                    Hotel hotel = new Hotel();
-                    hotel.setId(Long.parseLong(hotelParameters[0]));
-                    hotel.setName(hotelParameters[1]);
-                    hotel.setCountry(hotelParameters[2]);
-                    hotel.setCity(hotelParameters[3]);
-                    hotel.setStreet(hotelParameters[4]);
-                    return hotel;
-                }
+    public static Hotel findHotelByName(String name, String path) throws BadRequestException {
+         for (Hotel hotel : getHotels(path)) {
+             if (hotel.getName().equals(name))
+                 return hotel;
+         }
+        throw new BadRequestException("Hotel with name " + name + " was not found");
+    }
+
+    public static ArrayList<Hotel> findHotelByCity(String city, String path) throws BadRequestException {
+        ArrayList<Hotel> hotels = new ArrayList<>();
+        for (Hotel hotel : getHotels(path)) {
+            if (hotel.getCity().equals(city)) {
+                hotels.add(hotel);
             }
         }
-        throw new BadRequestException("Hotel with name " + name + " was not found");
+        return hotels;
     }
 
     private static boolean checkHotel(Hotel hotel) throws BadRequestException {
@@ -65,14 +64,26 @@ public class HotelRepository {
     }
 
     private static boolean checkHotelName(String name, String path) throws Exception {
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            String hotel;
-            while ((hotel = br.readLine()) != null) {
-                String[] hotelParameters = hotel.split(", ");
-                if (name.equals(hotelParameters[1]))
-                    throw new BadRequestException("Hotel with name " + name + " is already exist");
-            }
+        for (Hotel hotel : getHotels(path)) {
+            if (name.equals(hotel.getName()))
+                throw new BadRequestException("Hotel with name " + name + " is already exist");
         }
         return true;
+    }
+
+    private static ArrayList<Hotel> getHotels(String path) throws BadRequestException {
+        ArrayList<Hotel> hotels = new ArrayList<>();
+        for (String hotelDraft : Repository.getObjects(path)) {
+            Hotel hotel = new Hotel();
+            String[] hotelParameters = hotelDraft.split(", ");
+            hotel.setId(Long.parseLong(hotelParameters[0]));
+            hotel.setName(hotelParameters[1]);
+            hotel.setCountry(hotelParameters[2]);
+            hotel.setCity(hotelParameters[3]);
+            hotel.setStreet(hotelParameters[4]);
+
+            hotels.add(hotel);
+        }
+        return hotels;
     }
 }

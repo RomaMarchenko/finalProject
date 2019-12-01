@@ -1,10 +1,12 @@
 package lesson35.repository;
 
 import lesson35.exceptions.BadRequestException;
+import lesson35.model.Hotel;
 import lesson35.model.User;
 import lesson35.model.UserType;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class UserRepository {
@@ -44,13 +46,9 @@ public class UserRepository {
     }
 
     private static boolean checkUserName(String name, String path) throws Exception {
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            String user;
-            while ((user = br.readLine()) != null) {
-                String[] userParameters = user.split(", ");
-                if (name.equals(userParameters[1]))
-                    throw new BadRequestException("User with name " + name + " is already exist, please choose another name");
-            }
+        for (User user : getUsers(path)) {
+            if (user.getUserName().equals(name))
+                throw new BadRequestException("User with name " + name + " is already exist, please choose another name");
         }
         return true;
     }
@@ -61,25 +59,30 @@ public class UserRepository {
         return true;
     }
 
-    private static User findUserByName(String userName, String path) throws IOException, BadRequestException {
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            String userDraft;
-            while ((userDraft = br.readLine()) != null) {
-                String[] userParameters = userDraft.split(", ");
-                if (userName.equals(userParameters[1])) {
-                    User user = new User();
-                    user.setId(Long.parseLong(userParameters[0]));
-                    user.setUserName(userParameters[1]);
-                    user.setPassword(userParameters[2]);
-                    user.setCountry(userParameters[3]);
-                    if (userParameters[4].equals("USER"))
-                        user.setUserType(UserType.USER);
-                    else user.setUserType(UserType.ADMIN);
-
-                    return user;
-                }
-            }
+    private static User findUserByName(String userName, String path) throws BadRequestException {
+        for (User user : getUsers(path)) {
+            if (user.getUserName().equals(userName))
+                return user;
         }
         throw new BadRequestException("User with name " + userName + " was not found");
+    }
+
+    private static ArrayList<User> getUsers(String path) throws BadRequestException {
+        User user = new User();
+        ArrayList<User> users = new ArrayList<>();
+
+        for (String userDraft : Repository.getObjects(path)) {
+            String[] userParameters = userDraft.split(", ");
+            user.setId(Long.parseLong(userParameters[0]));
+            user.setUserName(userParameters[1]);
+            user.setPassword(userParameters[2]);
+            user.setCountry(userParameters[3]);
+            if (userParameters[4].equals("USER"))
+                user.setUserType(UserType.USER);
+            else user.setUserType(UserType.ADMIN);
+
+            users.add(user);
+        }
+        return users;
     }
 }
