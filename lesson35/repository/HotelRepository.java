@@ -5,19 +5,11 @@ import lesson35.model.Hotel;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Random;
 
-public class HotelRepository {
+public class HotelRepository extends GeneralRepository {
     public static Hotel addHotel(Hotel hotel, String path) throws Exception {
         if (checkHotel(hotel) && checkHotelName(hotel.getName(), path)) {
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(path, true))) {
-                Random id = new Random();
-                hotel.setId(Math.abs(id.nextLong()));
-                bw.append(hotel.toString());
-                bw.append("\n");
-            } catch (IOException e) {
-                System.err.println("Repository does not exist");
-            }
+            write(hotel, path);
         }
         return hotel;
     }
@@ -73,7 +65,7 @@ public class HotelRepository {
 
     private static ArrayList<Hotel> getHotels(String path) throws BadRequestException {
         ArrayList<Hotel> hotels = new ArrayList<>();
-        for (String hotelDraft : Repository.getObjects(path)) {
+        for (String hotelDraft : GeneralRepository.getObjects(path)) {
             Hotel hotel = new Hotel();
             String[] hotelParameters = hotelDraft.split(", ");
             hotel.setId(Long.parseLong(hotelParameters[0]));

@@ -2,7 +2,7 @@ package lesson35.model;
 
 import java.util.Date;
 
-public class Order {
+public class Order extends IdEntity{
     private long id;
     private User user;
     private Room room;

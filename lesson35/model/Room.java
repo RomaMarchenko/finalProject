@@ -2,7 +2,7 @@ package lesson35.model;
 
 import java.util.Date;
 
-public class Room {
+public class Room extends IdEntity{
     private long id;
     private int numberOfGuests;
     private double price;

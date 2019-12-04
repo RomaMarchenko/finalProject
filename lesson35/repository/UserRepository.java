@@ -1,15 +1,12 @@
 package lesson35.repository;
 
 import lesson35.exceptions.BadRequestException;
-import lesson35.model.Hotel;
 import lesson35.model.User;
 import lesson35.model.UserType;
 
-import java.io.*;
 import java.util.ArrayList;
-import java.util.Random;
 
-public class UserRepository {
+public class UserRepository extends GeneralRepository{
     //считывание данных - считывание файла
     //обработка данных - маппинг данных
 
@@ -22,14 +19,7 @@ public class UserRepository {
     public static User registerUser(User user, String path) throws Exception {
         //save user to db
         if (checkUser(user) && checkUserName(user.getUserName(), path)) {
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(path, true))) {
-                Random id = new Random();
-                user.setId(Math.abs(id.nextLong()));
-                    bw.append(user.toString());
-                    bw.append("\n");
-            } catch (IOException e) {
-                System.err.println("Repository does not exist");
-            }
+            write(user, path);
         }
         return user;
     }
@@ -70,7 +60,7 @@ public class UserRepository {
     private static ArrayList<User> getUsers(String path) throws BadRequestException {
         ArrayList<User> users = new ArrayList<>();
 
-        for (String userDraft : Repository.getObjects(path)) {
+        for (String userDraft : GeneralRepository.getObjects(path)) {
             User user = new User();
             String[] userParameters = userDraft.split(", ");
             user.setId(Long.parseLong(userParameters[0]));
