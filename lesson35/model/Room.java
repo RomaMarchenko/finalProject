@@ -2,7 +2,7 @@ package lesson35.model;
 
 import java.util.Date;
 
-public class Room extends IdEntity{
+public class Room extends Parameters {
     private long id;
     private int numberOfGuests;
     private double price;
@@ -21,6 +21,9 @@ public class Room extends IdEntity{
         this.hotel = hotel;
     }
 
+    public Room() {
+    }
+
     @Override
     public String toString() {
         return
@@ -31,5 +34,75 @@ public class Room extends IdEntity{
                 ", " + petsAllowed +
                 ", " + dateAvailableFrom +
                 ", " + hotel.getId();
+    }
+
+    @Override
+    public long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @Override
+    public int getNumberOfGuests() {
+        return numberOfGuests;
+    }
+
+    @Override
+    public void setNumberOfGuests(int numberOfGuests) {
+        this.numberOfGuests = numberOfGuests;
+    }
+
+    @Override
+    public double getPrice() {
+        return price;
+    }
+
+    @Override
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    @Override
+    public boolean isBreakfastIncluded() {
+        return breakfastIncluded;
+    }
+
+    @Override
+    public void setBreakfastIncluded(boolean breakfastIncluded) {
+        this.breakfastIncluded = breakfastIncluded;
+    }
+
+    @Override
+    public boolean isPetsAllowed() {
+        return petsAllowed;
+    }
+
+    @Override
+    public void setPetsAllowed(boolean petsAllowed) {
+        this.petsAllowed = petsAllowed;
+    }
+
+    @Override
+    public Date getDateAvailableFrom() {
+        return dateAvailableFrom;
+    }
+
+    @Override
+    public void setDateAvailableFrom(Date dateAvailableFrom) {
+        this.dateAvailableFrom = dateAvailableFrom;
+    }
+
+    @Override
+    public Hotel getHotel() {
+        return hotel;
+    }
+
+    @Override
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
     }
 }

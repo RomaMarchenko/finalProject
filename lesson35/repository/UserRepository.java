@@ -1,6 +1,7 @@
 package lesson35.repository;
 
 import lesson35.exceptions.BadRequestException;
+import lesson35.model.Hotel;
 import lesson35.model.User;
 import lesson35.model.UserType;
 
@@ -12,20 +13,22 @@ public class UserRepository extends GeneralRepository{
 
     private static User loggedUser;
 
+    private static String path = "C:\\Users\\Roma_\\Desktop\\Gromcode Tests\\Final Project\\UserDb.txt";
+
     public static User getLoggedUser() {
         return loggedUser;
     }
 
-    public static User registerUser(User user, String path) throws Exception {
+    public static User registerUser(User user) throws Exception {
         //save user to db
-        if (checkUser(user) && checkUserName(user.getUserName(), path)) {
+        if (checkUser(user) && checkUserName(user.getUserName())) {
             write(user, path);
         }
         return user;
     }
 
-    public static void login(String userName, String password, String path) throws Exception {
-        User user = findUserByName(userName, path);
+    public static void login(String userName, String password) throws Exception {
+        User user = findUserByName(userName);
         if (password.equals(user.getPassword())) {
             loggedUser = user;
         }
@@ -35,8 +38,16 @@ public class UserRepository extends GeneralRepository{
         loggedUser = null;
     }
 
-    private static boolean checkUserName(String name, String path) throws Exception {
-        for (User user : getUsers(path)) {
+    public static User getUserById(long id) throws Exception {
+        for (User user : getUsers()) {
+            if (user.getId() == id)
+                return user;
+        }
+        throw new BadRequestException("User with id " + id + " was not found");
+    }
+
+    private static boolean checkUserName(String name) throws Exception {
+        for (User user : getUsers()) {
             if (user.getUserName().equals(name))
                 throw new BadRequestException("User with name " + name + " is already exist, please choose another name");
         }
@@ -49,30 +60,16 @@ public class UserRepository extends GeneralRepository{
         return true;
     }
 
-    private static User findUserByName(String userName, String path) throws BadRequestException {
-        for (User user : getUsers(path)) {
+    private static User findUserByName(String userName) throws Exception {
+        for (User user : getUsers()) {
             if (user.getUserName().equals(userName))
                 return user;
         }
         throw new BadRequestException("User with name " + userName + " was not found");
     }
 
-    private static ArrayList<User> getUsers(String path) throws BadRequestException {
-        ArrayList<User> users = new ArrayList<>();
-
-        for (String userDraft : GeneralRepository.getObjects(path)) {
-            User user = new User();
-            String[] userParameters = userDraft.split(", ");
-            user.setId(Long.parseLong(userParameters[0]));
-            user.setUserName(userParameters[1]);
-            user.setPassword(userParameters[2]);
-            user.setCountry(userParameters[3]);
-            if (userParameters[4].equals("USER"))
-                user.setUserType(UserType.USER);
-            else user.setUserType(UserType.ADMIN);
-
-            users.add(user);
-        }
-        return users;
+    private static ArrayList<User> getUsers() throws Exception {
+        User user = new User();
+        return new ArrayList<>(GeneralRepository.getObjects(path, user));
     }
 }

@@ -7,19 +7,19 @@ import lesson35.service.HotelService;
 import java.util.ArrayList;
 
 public class HotelController {
-    public static Hotel addHotel(Hotel hotel, String path) throws Exception {
-        return HotelService.addHotel(hotel, path);
+    public static Hotel addHotel(Hotel hotel) throws Exception {
+        return HotelService.addHotel(hotel);
     }
 
-    public static void deleteHotel(long hotelId, String path) throws AccessException {
-        HotelService.deleteHotel(hotelId, path);
+    public static void deleteHotel(long hotelId) throws AccessException {
+        HotelService.deleteHotel(hotelId);
     }
 
-    public static Hotel findHotelByName(String name, String path) throws Exception {
-        return HotelService.findHotelByName(name, path);
+    public static Hotel findHotelByName(String name) throws Exception {
+        return HotelService.findHotelByName(name);
     }
 
-    public static ArrayList<Hotel> findHotelByCity(String city, String path) throws Exception {
-        return HotelService.findHotelByCity(city, path);
+    public static ArrayList<Hotel> findHotelByCity(String city) throws Exception {
+        return HotelService.findHotelByCity(city);
     }
 }
