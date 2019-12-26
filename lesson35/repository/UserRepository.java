@@ -1,10 +1,9 @@
 package lesson35.repository;
 
 import lesson35.exceptions.BadRequestException;
-import lesson35.model.Hotel;
-import lesson35.model.User;
-import lesson35.model.UserType;
+import lesson35.model.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class UserRepository extends GeneralRepository{
@@ -67,9 +66,22 @@ public class UserRepository extends GeneralRepository{
         }
         throw new BadRequestException("User with name " + userName + " was not found");
     }
+    //TODO change access modifier
+    public static ArrayList<User> getUsers() throws Exception {
+        return new ArrayList<User>(GeneralRepository.getObjects(path));
+    }
 
-    private static ArrayList<User> getUsers() throws Exception {
+    @Override
+     User mapObject(String object) {
+        String[] objectParameters = object.split(", ");
         User user = new User();
-        return new ArrayList<>(GeneralRepository.getObjects(path, user));
+        user.setId(Long.parseLong(objectParameters[0]));
+        user.setUserName(objectParameters[1]);
+        user.setPassword(objectParameters[2]);
+        user.setCountry(objectParameters[3]);
+        if (objectParameters[4].equals("USER"))
+            user.setUserType(UserType.USER);
+        else user.setUserType(UserType.ADMIN);
+        return user;
     }
 }

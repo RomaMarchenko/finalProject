@@ -2,7 +2,10 @@ package lesson35.repository;
 
 import lesson35.exceptions.BadRequestException;
 import lesson35.model.Hotel;
+import lesson35.model.Parameters;
+import lesson35.model.User;
 
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -17,22 +20,7 @@ public class HotelRepository extends GeneralRepository {
     }
 
     public static void deleteHotel(long hotelId) {
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            String id = String.valueOf(hotelId);
-            String hotel;
-            StringBuffer hotels = new StringBuffer();
-            while ((hotel = br.readLine()) != null) {
-                if (!hotel.split(", ")[0].equals(id)) {
-                    hotels.append(hotel);
-                    hotels.append("\n");
-                }
-            }
-            BufferedWriter bw = new BufferedWriter(new FileWriter(path, false));
-            bw.append(hotels);
-            bw.close();
-        } catch (IOException e) {
-            System.err.println("Repository does not exist");
-        }
+        GeneralRepository.deleteObject(hotelId, path);
     }
 
     public static Hotel findHotelByName(String name) throws Exception {
@@ -75,8 +63,21 @@ public class HotelRepository extends GeneralRepository {
         return true;
     }
 
-    private static ArrayList<Hotel> getHotels() throws Exception {
+    //TODO change access modifier
+    public static ArrayList<Hotel> getHotels() throws Exception {
+        return ArrayList<Hotel>(GeneralRepository.getObjects(path));
+    }
+
+    @Override
+    Hotel mapObject(String object) {
+        String[] objectParameters = object.split(", ");
         Hotel hotel = new Hotel();
-        return new ArrayList<>(GeneralRepository.getObjects(path, hotel));
+        hotel.setId(Long.parseLong(objectParameters[0]));
+        hotel.setName(objectParameters[1]);
+        hotel.setCountry(objectParameters[2]);
+        hotel.setCity(objectParameters[3]);
+        hotel.setStreet(objectParameters[4]);
+
+        return  hotel;
     }
 }

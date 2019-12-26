@@ -3,6 +3,7 @@ package lesson35.demo;
 import lesson35.controller.HotelController;
 import lesson35.controller.UserController;
 import lesson35.model.Hotel;
+import lesson35.repository.HotelRepository;
 import lesson35.repository.UserRepository;
 
 public class DemoHotel {
@@ -12,10 +13,11 @@ public class DemoHotel {
         UserController.login("Name 2", "****");
         System.out.println(UserRepository.getLoggedUser());
         //System.out.println(HotelController.addHotel(hotel1));
-        HotelController.deleteHotel(hotel1.getId());
+        //HotelController.deleteHotel(4024);
         //HotelController.addHotel(hotel1);
         //HotelController.addHotel(hotel2);
         //System.out.println(HotelController.findHotelByName("Hotel 1"));
-        System.out.println(HotelController.findHotelByCity("Kiev"));
+        //System.out.println(HotelController.findHotelByCity("Kiev"));
+        System.out.println(HotelRepository.getHotels());
     }
 }

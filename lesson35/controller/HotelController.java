@@ -20,6 +20,6 @@ public class HotelController {
     }
 
     public static ArrayList<Hotel> findHotelByCity(String city) throws Exception {
-        return HotelService.findHotelByCity(city);
+        return HotelService. findHotelByCity(city);
     }
 }
