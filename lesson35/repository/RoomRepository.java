@@ -3,13 +3,26 @@ package lesson35.repository;
 import lesson35.exceptions.BadRequestException;
 import lesson35.model.*;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
 
 public class RoomRepository extends GeneralRepository {
     private static String path = "C:\\Users\\Roma_\\Desktop\\Gromcode Tests\\Final Project\\RoomDb.txt";
 
-    public static Room getRoomById(long id) throws Exception {
+    public Room addRoom(Room room) throws BadRequestException, IOException {
+        if(checkRoom(room)) {
+            write(room, path);
+        }
+        return room;
+    }
+
+    public void deleteRoom(long roomId) {
+        GeneralRepository.deleteObject(roomId, path);
+    }
+
+    private Room getRoomById(long id) throws Exception {
         for (Room room : getRooms()) {
             if (room.getId() == id)
                 return room;
@@ -17,8 +30,16 @@ public class RoomRepository extends GeneralRepository {
         throw new BadRequestException("Room with id " + id + " was not found");
     }
 
-    private static ArrayList<Room> getRooms() throws Exception {
-        return new ArrayList<Room>(GeneralRepository.getObjects(path));
+    private ArrayList<Room> getRooms() throws Exception {
+        return new ArrayList<Room>(getObjects(path));
+    }
+
+    private boolean checkRoom(Room room) throws BadRequestException {
+        if (room == null || room.getDateAvailableFrom() == null || room.getHotel() == null) {
+            throw new BadRequestException("All fields of room must be filled, please check your input again");
+        } else {
+            return true;
+        }
     }
 
     @Override

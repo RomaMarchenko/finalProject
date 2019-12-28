@@ -9,12 +9,14 @@ public class UserService {
     public static User registerUser(User user) throws Exception {
         //check business logic
         if (checkCountry(user.getCountry())) {
-            return UserRepository.registerUser(user);
+            UserRepository userRepository = new UserRepository();
+            return userRepository.registerUser(user);
         } else throw new BadRequestException("Country field can contain only letters, please check your spelling");
     }
 
     public static void login(String userName, String password) throws Exception {
-        UserRepository.login(userName, password);
+        UserRepository userRepository = new UserRepository();
+        userRepository.login(userName, password);
     }
 
     public static void logout() {

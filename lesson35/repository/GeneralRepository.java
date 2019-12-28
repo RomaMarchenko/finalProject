@@ -1,6 +1,6 @@
 package lesson35.repository;
 
-import lesson35.model.Parameters;
+import lesson35.model.idEntity;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import java.util.Random;
 
 public abstract class GeneralRepository {
 
-    public static <T extends Parameters> void write(T t, String path) throws IOException {
+    public static <T extends idEntity> void write(T t, String path) throws IOException {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(path, true))) {
             Random id = new Random();
             t.setId(Math.abs(id.nextLong()));

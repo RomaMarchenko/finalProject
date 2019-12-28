@@ -9,6 +9,6 @@ public class DemoUser {
         User user1 = new User(0, "Name 1", "****", "Ukraine", UserType.USER);
         User user2 = new User(0, "Name 2", "****", "UK", UserType.ADMIN);
         //System.out.println(UserController.registerUser(user2));
-        System.out.println(UserRepository.getUsers());
+        UserRepository userRepository = new UserRepository();
     }
 }

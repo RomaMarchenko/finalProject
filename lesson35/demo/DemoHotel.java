@@ -18,6 +18,5 @@ public class DemoHotel {
         //HotelController.addHotel(hotel2);
         //System.out.println(HotelController.findHotelByName("Hotel 1"));
         //System.out.println(HotelController.findHotelByCity("Kiev"));
-        System.out.println(HotelRepository.getHotels());
     }
 }

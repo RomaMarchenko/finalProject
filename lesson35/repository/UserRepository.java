@@ -18,7 +18,7 @@ public class UserRepository extends GeneralRepository{
         return loggedUser;
     }
 
-    public static User registerUser(User user) throws Exception {
+    public User registerUser(User user) throws Exception {
         //save user to db
         if (checkUser(user) && checkUserName(user.getUserName())) {
             write(user, path);
@@ -26,7 +26,7 @@ public class UserRepository extends GeneralRepository{
         return user;
     }
 
-    public static void login(String userName, String password) throws Exception {
+    public void login(String userName, String password) throws Exception {
         User user = findUserByName(userName);
         if (password.equals(user.getPassword())) {
             loggedUser = user;
@@ -37,7 +37,7 @@ public class UserRepository extends GeneralRepository{
         loggedUser = null;
     }
 
-    public static User getUserById(long id) throws Exception {
+    public User getUserById(long id) throws Exception {
         for (User user : getUsers()) {
             if (user.getId() == id)
                 return user;
@@ -45,7 +45,7 @@ public class UserRepository extends GeneralRepository{
         throw new BadRequestException("User with id " + id + " was not found");
     }
 
-    private static boolean checkUserName(String name) throws Exception {
+    private boolean checkUserName(String name) throws Exception {
         for (User user : getUsers()) {
             if (user.getUserName().equals(name))
                 throw new BadRequestException("User with name " + name + " is already exist, please choose another name");
@@ -59,16 +59,16 @@ public class UserRepository extends GeneralRepository{
         return true;
     }
 
-    private static User findUserByName(String userName) throws Exception {
+    private User findUserByName(String userName) throws Exception {
         for (User user : getUsers()) {
             if (user.getUserName().equals(userName))
                 return user;
         }
         throw new BadRequestException("User with name " + userName + " was not found");
     }
-    //TODO change access modifier
-    public static ArrayList<User> getUsers() throws Exception {
-        return new ArrayList<User>(GeneralRepository.getObjects(path));
+
+    private ArrayList<User> getUsers() throws Exception {
+        return new ArrayList<User>(getObjects(path));
     }
 
     @Override
