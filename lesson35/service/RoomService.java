@@ -8,9 +8,10 @@ import lesson35.repository.RoomRepository;
 import lesson35.repository.UserRepository;
 
 public class RoomService {
+    private static RoomRepository roomRepository = new RoomRepository();
+
     public static Room addRoom(Room room) throws Exception {
-        if (checkAdminRights() || checkRoom(room)) {
-            RoomRepository roomRepository = new RoomRepository();
+        if (checkAdminRights() && checkRoom(room)) {
             return roomRepository.addRoom(room);
         }
         throw new AccessException("You don't have permission to perform this operation");
@@ -18,7 +19,6 @@ public class RoomService {
 
     public static void deleteRoom(long roomId) throws AccessException {
         if (checkAdminRights()) {
-            RoomRepository roomRepository = new RoomRepository();
             roomRepository.deleteRoom(roomId);
         } else {
             throw new AccessException("You don't have permission to perform this operation");

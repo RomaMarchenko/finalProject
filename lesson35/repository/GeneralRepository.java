@@ -21,7 +21,7 @@ public abstract class GeneralRepository {
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             ArrayList<T> objects = new ArrayList<>();
             String object;
-            while ((object = br.readLine()) != null) {
+            while ((object = br.readLine()) != null && !object.isEmpty()) {
                 objects.add(mapObject(object));
             }
             return objects;

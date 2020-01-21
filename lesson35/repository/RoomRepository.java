@@ -3,43 +3,88 @@ package lesson35.repository;
 import lesson35.exceptions.BadRequestException;
 import lesson35.model.*;
 
-import java.io.IOException;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class RoomRepository extends GeneralRepository {
     private static String path = "C:\\Users\\Roma_\\Desktop\\Gromcode Tests\\Final Project\\RoomDb.txt";
 
+    private static RoomRepository roomRepository = new RoomRepository();
+
     public Room addRoom(Room room) throws BadRequestException, IOException {
-        if(checkRoom(room)) {
+        if (room == null || room.getDateAvailableFrom() == null || room.getHotel() == null) {
+            throw new BadRequestException("All fields of room must be filled, please check your input again");
+        } else {
             write(room, path);
         }
         return room;
     }
 
     public void deleteRoom(long roomId) {
-        GeneralRepository.deleteObject(roomId, path);
+        deleteObject(roomId, path);
     }
 
-    private Room getRoomById(long id) throws Exception {
-        for (Room room : getRooms()) {
+    public static Room getRoomById(long id) throws Exception {
+        for (Room room : roomRepository.getRooms()) {
             if (room.getId() == id)
                 return room;
         }
         throw new BadRequestException("Room with id " + id + " was not found");
     }
 
-    private ArrayList<Room> getRooms() throws Exception {
-        return new ArrayList<Room>(getObjects(path));
+    public static void changeDateAvailableFrom (long roomId, Date dateAvailableFrom) throws Exception {
+        String room;
+        StringBuffer rooms = new StringBuffer();
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            String id = String.valueOf(roomId);
+            while ((room = br.readLine()) != null) {
+                if (!room.split(", ")[0].equals(id)) {
+                    rooms.append(room);
+                    rooms.append("\n");
+                } else {
+                    Room r = RoomRepository.getRoomById(Long.parseLong(room.split(", ")[0]));
+                    r.setDateAvailableFrom(dateAvailableFrom);
+                    rooms.append(r.toString());
+                    rooms.append("\n");
+                }
+            }
+            BufferedWriter bw = new BufferedWriter(new FileWriter(path, false));
+            bw.append(rooms);
+            bw.close();
+        } catch (IOException e) {
+            System.err.println("Repository does not exist");
+        }
     }
 
-    private boolean checkRoom(Room room) throws BadRequestException {
-        if (room == null || room.getDateAvailableFrom() == null || room.getHotel() == null) {
-            throw new BadRequestException("All fields of room must be filled, please check your input again");
-        } else {
-            return true;
+    public static void makeRoomAvailable (long roomId) throws Exception{
+        String room;
+        StringBuffer rooms = new StringBuffer();
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            String id = String.valueOf(roomId);
+            while ((room = br.readLine()) != null) {
+                if (!room.split(", ")[0].equals(id)) {
+                    rooms.append(room);
+                    rooms.append("\n");
+                } else {
+                    Room r = RoomRepository.getRoomById(Long.parseLong(room.split(", ")[0]));
+                    r.setDateAvailableFrom(new Date());
+                    rooms.append(r.toString());
+                    rooms.append("\n");
+                }
+            }
+            BufferedWriter bw = new BufferedWriter(new FileWriter(path, false));
+            bw.append(rooms);
+            bw.close();
+        } catch (IOException e) {
+            System.err.println("Repository does not exist");
         }
+    }
+
+    private ArrayList<Room> getRooms() throws Exception {
+        return new ArrayList<>(getObjects(path));
     }
 
     @Override

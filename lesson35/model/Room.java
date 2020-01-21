@@ -1,5 +1,6 @@
 package lesson35.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Room extends idEntity {
@@ -26,13 +27,14 @@ public class Room extends idEntity {
 
     @Override
     public String toString() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         return
                 id +
                 ", " + numberOfGuests +
                 ", " + price +
                 ", " + breakfastIncluded +
                 ", " + petsAllowed +
-                ", " + dateAvailableFrom +
+                ", " + dateFormat.format(dateAvailableFrom) +
                 ", " + hotel.getId();
     }
 

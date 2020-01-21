@@ -8,15 +8,22 @@ import java.util.ArrayList;
 public class HotelRepository extends GeneralRepository {
     private static String path = "C:\\Users\\Roma_\\Desktop\\Gromcode Tests\\Final Project\\HotelDb.txt";
 
+    private static HotelRepository hotelRepository = new HotelRepository();
+
     public Hotel addHotel(Hotel hotel) throws Exception {
-        if (checkHotel(hotel) && checkHotelName(hotel.getName(), path)) {
-            write(hotel, path);
+        if (hotel == null || hotel.getCity() == null || hotel.getCity().isEmpty() || hotel.getCountry() == null || hotel.getCountry().isEmpty() || hotel.getName() == null || hotel.getName().isEmpty() || hotel.getStreet() == null || hotel.getStreet().isEmpty()) {
+            throw new BadRequestException("All fields of hotel must be filled, please check your input again");
         }
+        for (Hotel hl : getHotels()) {
+            if (hl.getName().equals(hotel.getName()))
+                throw new BadRequestException("Hotel with name " + hotel.getName() + " is already exist");
+        }
+        write(hotel, path);
         return hotel;
     }
 
     public void deleteHotel(long hotelId) {
-        GeneralRepository.deleteObject(hotelId, path);
+        deleteObject(hotelId, path);
     }
 
     public Hotel findHotelByName(String name) throws Exception {
@@ -38,7 +45,6 @@ public class HotelRepository extends GeneralRepository {
     }
 
     public static Hotel getHotelById(long id) throws Exception {
-        HotelRepository hotelRepository = new HotelRepository();
         for (Hotel hotel : hotelRepository.getHotels()) {
             if (hotel.getId() == id)
                 return hotel;
@@ -46,22 +52,8 @@ public class HotelRepository extends GeneralRepository {
         throw  new BadRequestException("Hotel with id: " + id + "was not found");
     }
 
-    private static boolean checkHotel(Hotel hotel) throws BadRequestException {
-        if (hotel == null || hotel.getCity() == null || hotel.getCity().isEmpty() || hotel.getCountry() == null || hotel.getCountry().isEmpty() || hotel.getName() == null || hotel.getName().isEmpty() || hotel.getStreet() == null || hotel.getStreet().isEmpty())
-            throw new BadRequestException("All fields of hotel must be filled, please check your input again");
-        return true;
-    }
-
-    private boolean checkHotelName(String name, String path) throws Exception {
-        for (Hotel hotel : getHotels()) {
-            if (name.equals(hotel.getName()))
-                throw new BadRequestException("Hotel with name " + name + " is already exist");
-        }
-        return true;
-    }
-
     private ArrayList<Hotel> getHotels() throws Exception {
-        return new ArrayList<Hotel>(getObjects(path));
+        return new ArrayList<>(getObjects(path));
     }
 
     @Override

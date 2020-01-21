@@ -1,5 +1,6 @@
 package lesson35.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Order extends idEntity {
@@ -70,5 +71,16 @@ public class Order extends idEntity {
 
     public void setMoneyPaid(double moneyPaid) {
         this.moneyPaid = moneyPaid;
+    }
+
+    @Override
+    public String toString() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        return  id +
+                ", " + user.getId() +
+                ", " + room.getId() +
+                ", " + dateFormat.format(dateFrom) +
+                ", " + dateFormat.format(dateTo) +
+                ", " + moneyPaid;
     }
 }

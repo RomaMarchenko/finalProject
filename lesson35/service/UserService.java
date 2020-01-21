@@ -5,17 +5,16 @@ import lesson35.repository.UserRepository;
 import lesson35.model.User;
 
 public class UserService {
+    private static UserRepository userRepository = new UserRepository();
 
     public static User registerUser(User user) throws Exception {
         //check business logic
         if (checkCountry(user.getCountry())) {
-            UserRepository userRepository = new UserRepository();
             return userRepository.registerUser(user);
         } else throw new BadRequestException("Country field can contain only letters, please check your spelling");
     }
 
     public static void login(String userName, String password) throws Exception {
-        UserRepository userRepository = new UserRepository();
         userRepository.login(userName, password);
     }
 

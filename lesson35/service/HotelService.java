@@ -10,9 +10,10 @@ import java.util.ArrayList;
 
 
 public class HotelService {
+    private static HotelRepository hotelRepository = new HotelRepository();
+
     public static Hotel addHotel(Hotel hotel) throws Exception {
         if (checkAdminRights()) {
-            HotelRepository hotelRepository = new HotelRepository();
             return hotelRepository.addHotel(hotel);
         }
         throw new AccessException("You don't have permission to perform this operation");
@@ -20,7 +21,6 @@ public class HotelService {
 
     public static void deleteHotel(long hotelId) throws AccessException {
         if (checkAdminRights()) {
-            HotelRepository hotelRepository = new HotelRepository();
             hotelRepository.deleteHotel(hotelId);
         } else {
             throw new AccessException("You don't have permission to perform this operation");
@@ -29,7 +29,6 @@ public class HotelService {
 
     public static Hotel findHotelByName(String name) throws Exception {
         if (isUserLoggedIn()) {
-            HotelRepository hotelRepository = new HotelRepository();
             return hotelRepository.findHotelByName(name);
         }
         else throw new AccessException("You have to be logged in to perform this operation");
@@ -37,7 +36,6 @@ public class HotelService {
 
     public static ArrayList<Hotel> findHotelByCity(String city) throws Exception {
         if (isUserLoggedIn()) {
-            HotelRepository hotelRepository = new HotelRepository();
             return hotelRepository.findHotelByCity(city);
         }
         else throw new AccessException("You have to be logged in to perform this operation");
