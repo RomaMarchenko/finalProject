@@ -87,20 +87,34 @@ public class RoomRepository extends GeneralRepository {
     public Collection<Room> findRooms(Filter filter) throws Exception {
         ArrayList<Room> rooms = new ArrayList<>();
         for (Room room : getRooms()) {
-            if (filter.getNumberOfGuests() != room.getNumberOfGuests() && filter.getNumberOfGuests() != 0)
+            if (filter.getNumberOfGuests() != room.getNumberOfGuests() && filter.getNumberOfGuests() != 0) {
+                System.out.println("1");
                 continue;
-            if (filter.getPrice() != room.getPrice() && filter.getPrice() != 0)
+            }
+            if (filter.getPrice() != room.getPrice() && filter.getPrice() != 0) {
+                System.out.println("2");
                 continue;
-            if (filter.isBreakfastIncluded() != room.isBreakfastIncluded())
+            }
+            if (filter.isBreakfastIncluded() != null && filter.isBreakfastIncluded() != room.isBreakfastIncluded()) {
+                System.out.println("3");
                 continue;
-            if (filter.isPetsAllowed() != room.isPetsAllowed())
+            }
+            if (filter.isPetsAllowed() != null && filter.isPetsAllowed() != room.isPetsAllowed()) {
+                System.out.println("4");
                 continue;
-            if (filter.getDateAvailableFrom() != room.getDateAvailableFrom() && filter.getDateAvailableFrom() != null)
+            }
+            if (filter.getDateAvailableFrom() != room.getDateAvailableFrom() && filter.getDateAvailableFrom() != null) {
+                System.out.println("5");
                 continue;
-            if (!filter.getCountry().equals(room.getHotel().getCountry()) && filter.getCountry() != null)
+            }
+            if (filter.getCountry() != null && !filter.getCountry().equals(room.getHotel().getCountry())) {
+                System.out.println("6");
                 continue;
-            if (!filter.getCity().equals(room.getHotel().getCity()) && filter.getCity() != null)
+            }
+            if (filter.getCity() != null && !filter.getCity().equals(room.getHotel().getCity())) {
+                System.out.println("7");
                 continue;
+            }
             rooms.add(room);
         }
         return rooms;

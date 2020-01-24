@@ -25,11 +25,7 @@ public class DemoRoom {
         Filter filter = new Filter.Builder()
                 .setCountry("Ukraine")
                 .build();
-        //System.out.println(RoomController.findRooms(filter));
-        System.out.println(filter.getPrice());
+        System.out.println(RoomController.findRooms(filter));
         System.out.println(filter.isBreakfastIncluded());
-        System.out.println(filter.getCountry());
-        System.out.println(filter.getCity());
-        System.out.println(filter.getDateAvailableFrom());
     }
 }

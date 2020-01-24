@@ -5,8 +5,8 @@ import java.util.Date;
 public class Filter {
     private int numberOfGuests;
     private double price;
-    private boolean breakfastIncluded;
-    private boolean petsAllowed;
+    private Boolean breakfastIncluded;
+    private Boolean petsAllowed;
     private Date dateAvailableFrom;
     private String country;
     private String city;
@@ -19,11 +19,11 @@ public class Filter {
         return price;
     }
 
-    public boolean isBreakfastIncluded() {
+    public Boolean isBreakfastIncluded() {
         return breakfastIncluded;
     }
 
-    public boolean isPetsAllowed() {
+    public Boolean isPetsAllowed() {
         return petsAllowed;
     }
 
