@@ -6,6 +6,7 @@ import lesson35.model.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 
@@ -70,7 +71,7 @@ public class RoomRepository extends GeneralRepository {
                     rooms.append("\n");
                 } else {
                     Room r = RoomRepository.getRoomById(Long.parseLong(room.split(", ")[0]));
-                    r.setDateAvailableFrom(new Date());
+                    r. setDateAvailableFrom(new Date());
                     rooms.append(r.toString());
                     rooms.append("\n");
                 }
@@ -81,6 +82,28 @@ public class RoomRepository extends GeneralRepository {
         } catch (IOException e) {
             System.err.println("Repository does not exist");
         }
+    }
+
+    public Collection<Room> findRooms(Filter filter) throws Exception {
+        ArrayList<Room> rooms = new ArrayList<>();
+        for (Room room : getRooms()) {
+            if (filter.getNumberOfGuests() != room.getNumberOfGuests() && filter.getNumberOfGuests() != 0)
+                continue;
+            if (filter.getPrice() != room.getPrice() && filter.getPrice() != 0)
+                continue;
+            if (filter.isBreakfastIncluded() != room.isBreakfastIncluded())
+                continue;
+            if (filter.isPetsAllowed() != room.isPetsAllowed())
+                continue;
+            if (filter.getDateAvailableFrom() != room.getDateAvailableFrom() && filter.getDateAvailableFrom() != null)
+                continue;
+            if (!filter.getCountry().equals(room.getHotel().getCountry()) && filter.getCountry() != null)
+                continue;
+            if (!filter.getCity().equals(room.getHotel().getCity()) && filter.getCity() != null)
+                continue;
+            rooms.add(room);
+        }
+        return rooms;
     }
 
     private ArrayList<Room> getRooms() throws Exception {
