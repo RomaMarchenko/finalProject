@@ -31,14 +31,14 @@ public class HotelService {
         if (isUserLoggedIn()) {
             return hotelRepository.findHotelByName(name);
         }
-        else throw new AccessException("You have to be logged in to perform this operation");
+        throw new AccessException("You have to be logged in to perform this operation");
     }
 
     public static ArrayList<Hotel> findHotelByCity(String city) throws Exception {
         if (isUserLoggedIn()) {
             return hotelRepository.findHotelByCity(city);
         }
-        else throw new AccessException("You have to be logged in to perform this operation");
+        throw new AccessException("You have to be logged in to perform this operation");
     }
 
     private static boolean checkAdminRights() {

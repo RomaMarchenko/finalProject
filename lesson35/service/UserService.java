@@ -11,7 +11,8 @@ public class UserService {
         //check business logic
         if (checkCountry(user.getCountry())) {
             return userRepository.registerUser(user);
-        } else throw new BadRequestException("Country field can contain only letters, please check your spelling");
+        }
+        throw new BadRequestException("Country field can contain only letters, please check your spelling");
     }
 
     public static void login(String userName, String password) throws Exception {

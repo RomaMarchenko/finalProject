@@ -10,7 +10,7 @@ public class DemoOrder {
         UserController.login("Name 2", "****");
         SimpleDateFormat format = new SimpleDateFormat();
         format.applyPattern("dd-MM-yyyy");
-        //System.out.println(OrderController.bookRoom(5772756163389406005L, 4823634875991106527L, 1882533754088834892L, format.parse("10-11-2020"), format.parse("15-11-2020")));
-        OrderController.cancelReservation(5772756163389406005L, 4823634875991106527L);
+        //System.out.println(OrderController.bookRoom(2098585482229835139L, 4823634875991106527L, 1882533754088834892L, format.parse("10-11-2020"), format.parse("15-11-2020")));
+        OrderController.cancelReservation(2098585482229835139L, 4823634875991106527L);
     }
 }

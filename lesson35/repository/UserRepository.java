@@ -21,7 +21,8 @@ public class UserRepository extends GeneralRepository{
     public User registerUser(User user) throws Exception {
         if (user == null || user.getCountry() == null || user.getCountry().isEmpty() || user.getPassword() == null || user.getPassword().isEmpty() || user.getUserName() == null || user.getUserName().isEmpty() || user.getUserType() == null) {
             throw new BadRequestException("All fields of user must be filled, please check your input again");
-        } else if (checkUserName(user.getUserName())) {
+        }
+        if (checkUserName(user.getUserName())) {
             write(user, path);
         }
         return user;

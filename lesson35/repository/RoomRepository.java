@@ -13,14 +13,11 @@ import java.util.Date;
 public class RoomRepository extends GeneralRepository {
     private static String path = "C:\\Users\\Roma_\\Desktop\\Gromcode Tests\\Final Project\\RoomDb.txt";
 
-    private static RoomRepository roomRepository = new RoomRepository();
-
     public Room addRoom(Room room) throws BadRequestException, IOException {
         if (room == null || room.getDateAvailableFrom() == null || room.getHotel() == null) {
             throw new BadRequestException("All fields of room must be filled, please check your input again");
-        } else {
-            write(room, path);
         }
+        write(room, path);
         return room;
     }
 
@@ -28,59 +25,45 @@ public class RoomRepository extends GeneralRepository {
         deleteObject(roomId, path);
     }
 
-    public static Room getRoomById(long id) throws Exception {
-        for (Room room : roomRepository.getRooms()) {
+    public Room getRoomById(long id) throws Exception {
+        for (Room room : getRooms()) {
             if (room.getId() == id)
                 return room;
         }
         throw new BadRequestException("Room with id " + id + " was not found");
     }
 
-    public static void changeDateAvailableFrom (long roomId, Date dateAvailableFrom) throws Exception {
-        String room;
-        StringBuffer rooms = new StringBuffer();
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            String id = String.valueOf(roomId);
-            while ((room = br.readLine()) != null) {
-                if (!room.split(", ")[0].equals(id)) {
-                    rooms.append(room);
-                    rooms.append("\n");
-                } else {
-                    Room r = RoomRepository.getRoomById(Long.parseLong(room.split(", ")[0]));
-                    r.setDateAvailableFrom(dateAvailableFrom);
-                    rooms.append(r.toString());
-                    rooms.append("\n");
-                }
+    public void changeDateAvailableFrom (long roomId, Date dateAvailableFrom) throws Exception {
+        ArrayList<Room> rooms = new ArrayList<>();
+        for (Room room : getRooms()) {
+            if (room.getId() == roomId)
+                room.setDateAvailableFrom(dateAvailableFrom);
+            rooms.add(room);
+        }
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(path, false));
+        bufferedWriter.append("");
+        bufferedWriter.close();
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path, true))) {
+            for (Room room : rooms) {
+                bw.append(room.toString());
             }
-            BufferedWriter bw = new BufferedWriter(new FileWriter(path, false));
-            bw.append(rooms);
-            bw.close();
-        } catch (IOException e) {
-            System.err.println("Repository does not exist");
         }
     }
 
-    public static void makeRoomAvailable (long roomId) throws Exception{
-        String room;
-        StringBuffer rooms = new StringBuffer();
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            String id = String.valueOf(roomId);
-            while ((room = br.readLine()) != null) {
-                if (!room.split(", ")[0].equals(id)) {
-                    rooms.append(room);
-                    rooms.append("\n");
-                } else {
-                    Room r = RoomRepository.getRoomById(Long.parseLong(room.split(", ")[0]));
-                    r. setDateAvailableFrom(new Date());
-                    rooms.append(r.toString());
-                    rooms.append("\n");
-                }
+    public void makeRoomAvailable (long roomId) throws Exception{
+        ArrayList<Room> rooms = new ArrayList<>();
+        for (Room room : getRooms()) {
+            if (room.getId() == roomId)
+                room.setDateAvailableFrom(new Date());
+            rooms.add(room);
+        }
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(path, false));
+        bufferedWriter.append("");
+        bufferedWriter.close();
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path, true))) {
+            for (Room room : rooms) {
+                bw.append(room.toString());
             }
-            BufferedWriter bw = new BufferedWriter(new FileWriter(path, false));
-            bw.append(rooms);
-            bw.close();
-        } catch (IOException e) {
-            System.err.println("Repository does not exist");
         }
     }
 

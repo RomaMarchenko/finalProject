@@ -11,18 +11,20 @@ import java.util.Date;
 public class OrderRepository extends GeneralRepository{
     private static String path = "C:\\Users\\Roma_\\Desktop\\Gromcode Tests\\Final Project\\OrderDb.txt";
 
+    private RoomRepository roomRepository = new RoomRepository();
+
     public Order bookRoom(long roomId, long userId, long hotelId, Date dateFrom, Date dateTo) throws Exception {
         Order order = new Order();
         if (isRoomAvailable(roomId, hotelId)) {
             if (dateFrom.compareTo(dateTo) >= 0)
                 throw new BadRequestException("Room can't be booked less than for 1 day");
             order.setUser(UserRepository.getUserById(userId));
-            order.setRoom(RoomRepository.getRoomById(roomId));
+            order.setRoom(roomRepository.getRoomById(roomId));
             order.setDateFrom(dateFrom);
             order.setDateTo(dateTo);
             order.setMoneyPaid(countOrderPrice(roomId, dateFrom, dateTo));
             write(order, path);
-            RoomRepository.changeDateAvailableFrom(roomId, dateTo);
+            roomRepository.changeDateAvailableFrom(roomId, dateTo);
         }
         return order;
     }
@@ -39,7 +41,7 @@ public class OrderRepository extends GeneralRepository{
                 } else {
                     if (!object.split(", ")[1].equals(String.valueOf(userId)))
                         throw new BadRequestException("You can't cancel orders of other users");
-                    RoomRepository.makeRoomAvailable(roomId);
+                    roomRepository.makeRoomAvailable(roomId);
             }
             }
             BufferedWriter bw = new BufferedWriter(new FileWriter(path, false));
@@ -56,7 +58,7 @@ public class OrderRepository extends GeneralRepository{
 
     private boolean isRoomAvailable(long roomId, long hotelId) throws Exception {
         for (Order order : getOrders()) {
-            if (order.getRoom().getId() == roomId && RoomRepository.getRoomById(roomId).getHotel().getId() == hotelId) {
+            if (order.getRoom().getId() == roomId && roomRepository.getRoomById(roomId).getHotel().getId() == hotelId) {
                 throw new BadRequestException("This room is already booked");
             }
         }
@@ -66,7 +68,7 @@ public class OrderRepository extends GeneralRepository{
     private double countOrderPrice(long roomId, Date dateFrom, Date dateTo) throws Exception {
         long delt = dateTo.getTime() - dateFrom.getTime();
 
-        return delt / 86400000 * RoomRepository.getRoomById(roomId).getPrice();
+        return delt / 86400000 * roomRepository.getRoomById(roomId).getPrice();
     }
 
     @Override
@@ -75,7 +77,7 @@ public class OrderRepository extends GeneralRepository{
         Order order = new Order();
         order.setId(Long.parseLong(objectParameters[0]));
         order.setUser(UserRepository.getUserById(Long.parseLong(objectParameters[1])));
-        order.setRoom(RoomRepository.getRoomById(Long.parseLong(objectParameters[2])));
+        order.setRoom(roomRepository.getRoomById(Long.parseLong(objectParameters[2])));
         SimpleDateFormat format = new SimpleDateFormat();
         format.applyPattern("dd-MM-yyyy");
         order.setDateFrom(format.parse(objectParameters[3]));
