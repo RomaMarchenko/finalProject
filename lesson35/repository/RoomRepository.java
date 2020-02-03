@@ -34,37 +34,13 @@ public class RoomRepository extends GeneralRepository {
     }
 
     public void changeDateAvailableFrom (long roomId, Date dateAvailableFrom) throws Exception {
-        ArrayList<Room> rooms = new ArrayList<>();
-        for (Room room : getRooms()) {
-            if (room.getId() == roomId)
-                room.setDateAvailableFrom(dateAvailableFrom);
-            rooms.add(room);
-        }
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(path, false));
-        bufferedWriter.append("");
-        bufferedWriter.close();
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path, true))) {
-            for (Room room : rooms) {
-                bw.append(room.toString());
-            }
-        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        updateAll(roomId, dateFormat.format(dateAvailableFrom), 5, path);
     }
 
     public void makeRoomAvailable (long roomId) throws Exception{
-        ArrayList<Room> rooms = new ArrayList<>();
-        for (Room room : getRooms()) {
-            if (room.getId() == roomId)
-                room.setDateAvailableFrom(new Date());
-            rooms.add(room);
-        }
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(path, false));
-        bufferedWriter.append("");
-        bufferedWriter.close();
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path, true))) {
-            for (Room room : rooms) {
-                bw.append(room.toString());
-            }
-        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        updateAll(roomId, dateFormat.format(new Date()), 5, path);
     }
 
     public Collection<Room> findRooms(Filter filter) throws Exception {

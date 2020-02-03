@@ -3,7 +3,7 @@ package lesson35.model;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Order extends idEntity {
+public class Order extends IdEntity {
     private long id;
     private User user;
     private Room room;

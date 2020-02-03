@@ -2,7 +2,7 @@ package lesson35.model;
 
 import java.util.Objects;
 
-public class Hotel extends idEntity {
+public class Hotel extends IdEntity {
     private long id;
     private String name;
     private String country;

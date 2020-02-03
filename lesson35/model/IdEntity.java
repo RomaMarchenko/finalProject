@@ -2,7 +2,7 @@ package lesson35.model;
 
 import java.util.Date;
 
-public abstract class idEntity {
+public abstract class IdEntity {
     private long id;
 
 

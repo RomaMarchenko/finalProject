@@ -2,7 +2,7 @@ package lesson35.model;
 
 import java.util.Objects;
 
-public class User extends idEntity {
+public class User extends IdEntity {
     private long id;
     private String userName;
     private String password;
