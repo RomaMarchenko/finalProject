@@ -60,8 +60,9 @@ public abstract class GeneralRepository {
                     objects.append(object);
                     objects.append("\n");
                 } else {
-                    object.split(", ")[indexOfParameterToChange] = newValueOfParameter;
-                    objects.append(object);
+                    String parameterToChange = object.split(", ")[indexOfParameterToChange];
+                    String obj = object.replace(parameterToChange, newValueOfParameter);
+                    objects.append(obj);
                 }
             }
             BufferedWriter bw = new BufferedWriter(new FileWriter(path, false));
