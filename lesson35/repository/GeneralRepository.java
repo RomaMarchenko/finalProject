@@ -50,26 +50,15 @@ public abstract class GeneralRepository {
         }
     }
 
-    public void updateAll (long objectId, String newValueOfParameter, int indexOfParameterToChange, String path) throws IOException {
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            String id = String.valueOf(objectId);
-            String object;
-            StringBuffer objects = new StringBuffer();
-            while ((object = br.readLine()) != null) {
-                if (!object.split(", ")[0].equals(id)) {
-                    objects.append(object);
-                    objects.append("\n");
-                } else {
-                    String parameterToChange = object.split(", ")[indexOfParameterToChange];
-                    String obj = object.replace(parameterToChange, newValueOfParameter);
-                    objects.append(obj);
-                }
+    public <T extends IdEntity> void updateAll (ArrayList<T> updatedObjects, String path) throws Exception {
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(path, false));
+        bufferedWriter.append("");
+        bufferedWriter.close();
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path, true))) {
+            for (T t : updatedObjects) {
+                bw.append(t.toString());
+                bw.append("\n");
             }
-            BufferedWriter bw = new BufferedWriter(new FileWriter(path, false));
-            bw.append(objects);
-            bw.close();
-        } catch (IOException e) {
-            System.err.println("Repository does not exist");
         }
     }
 

@@ -34,13 +34,23 @@ public class RoomRepository extends GeneralRepository {
     }
 
     public void changeDateAvailableFrom (long roomId, Date dateAvailableFrom) throws Exception {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        updateAll(roomId, dateFormat.format(dateAvailableFrom), 5, path);
+        ArrayList<Room> rooms = new ArrayList<>();
+        for (Room room : getRooms()) {
+            if (room.getId() == roomId)
+                room.setDateAvailableFrom(dateAvailableFrom);
+            rooms.add(room);
+        }
+        updateAll(rooms, path);
     }
 
     public void makeRoomAvailable (long roomId) throws Exception{
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        updateAll(roomId, dateFormat.format(new Date()), 5, path);
+        ArrayList<Room> rooms = new ArrayList<>();
+        for (Room room : getRooms()) {
+            if (room.getId() == roomId)
+                room.setDateAvailableFrom(new Date());
+            rooms.add(room);
+        }
+        updateAll(rooms, path);
     }
 
     public Collection<Room> findRooms(Filter filter) throws Exception {
