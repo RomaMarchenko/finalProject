@@ -2,13 +2,14 @@ package lesson35.service;
 
 import lesson35.exceptions.BadRequestException;
 import lesson35.model.Order;
+import lesson35.repository.HotelRepository;
 import lesson35.repository.OrderRepository;
 import lesson35.repository.UserRepository;
 
 import java.util.Date;
 
 public class OrderService {
-    private static OrderRepository orderRepository = new OrderRepository();
+    private static OrderRepository orderRepository = new OrderRepository(OrderRepository.getPath());
 
     public static Order bookRoom(long roomId, long userId, long hotelId, Date dateFrom, Date dateTo) throws Exception {
         if (isUserLoggedIn()) {

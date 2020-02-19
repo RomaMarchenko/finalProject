@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 
 public class HotelService {
-    private static HotelRepository hotelRepository = new HotelRepository();
+    private static HotelRepository hotelRepository = new HotelRepository(HotelRepository.getPath());
 
     public static Hotel addHotel(Hotel hotel) throws Exception {
         if (checkAdminRights()) {

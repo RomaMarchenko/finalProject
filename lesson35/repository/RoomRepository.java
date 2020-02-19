@@ -13,16 +13,24 @@ import java.util.Date;
 public class RoomRepository extends GeneralRepository {
     private static String path = "C:\\Users\\Roma_\\Desktop\\Gromcode Tests\\Final Project\\RoomDb.txt";
 
+    public RoomRepository(String path) {
+        super(path);
+    }
+
+    public static String getPath() {
+        return path;
+    }
+
     public Room addRoom(Room room) throws BadRequestException, IOException {
         if (room == null || room.getDateAvailableFrom() == null || room.getHotel() == null) {
             throw new BadRequestException("All fields of room must be filled, please check your input again");
         }
-        write(room, path);
+        write(room);
         return room;
     }
 
     public void deleteRoom(long roomId) {
-        deleteObject(roomId, path);
+        deleteObject(roomId);
     }
 
     public Room getRoomById(long id) throws Exception {
@@ -40,7 +48,7 @@ public class RoomRepository extends GeneralRepository {
                 room.setDateAvailableFrom(dateAvailableFrom);
             rooms.add(room);
         }
-        updateAll(rooms, path);
+        updateAll(rooms);
     }
 
     public void makeRoomAvailable (long roomId) throws Exception{
@@ -50,47 +58,52 @@ public class RoomRepository extends GeneralRepository {
                 room.setDateAvailableFrom(new Date());
             rooms.add(room);
         }
-        updateAll(rooms, path);
+        updateAll(rooms);
     }
 
     public Collection<Room> findRooms(Filter filter) throws Exception {
         ArrayList<Room> rooms = new ArrayList<>();
         for (Room room : getRooms()) {
-            if (filter.getNumberOfGuests() != room.getNumberOfGuests() && filter.getNumberOfGuests() != 0) {
-                System.out.println("1");
-                continue;
-            }
-            if (filter.getPrice() != room.getPrice() && filter.getPrice() != 0) {
-                System.out.println("2");
-                continue;
-            }
-            if (filter.isBreakfastIncluded() != null && filter.isBreakfastIncluded() != room.isBreakfastIncluded()) {
-                System.out.println("3");
-                continue;
-            }
-            if (filter.isPetsAllowed() != null && filter.isPetsAllowed() != room.isPetsAllowed()) {
-                System.out.println("4");
-                continue;
-            }
-            if (filter.getDateAvailableFrom() != room.getDateAvailableFrom() && filter.getDateAvailableFrom() != null) {
-                System.out.println("5");
-                continue;
-            }
-            if (filter.getCountry() != null && !filter.getCountry().equals(room.getHotel().getCountry())) {
-                System.out.println("6");
-                continue;
-            }
-            if (filter.getCity() != null && !filter.getCity().equals(room.getHotel().getCity())) {
-                System.out.println("7");
-                continue;
-            }
-            rooms.add(room);
+            if (checkRoom(filter, room))
+                rooms.add(room);
         }
         return rooms;
     }
 
+    private boolean checkRoom(Filter filter, Room room) {
+        if (filter.getNumberOfGuests() != room.getNumberOfGuests() && filter.getNumberOfGuests() != 0) {
+            System.out.println("1");
+            return false;
+        }
+        if (filter.getPrice() != room.getPrice() && filter.getPrice() != 0) {
+            System.out.println("2");
+            return false;
+        }
+        if (filter.isBreakfastIncluded() != null && filter.isBreakfastIncluded() != room.isBreakfastIncluded()) {
+            System.out.println("3");
+            return false;
+        }
+        if (filter.isPetsAllowed() != null && filter.isPetsAllowed() != room.isPetsAllowed()) {
+            System.out.println("4");
+            return false;
+        }
+        if (filter.getDateAvailableFrom() != room.getDateAvailableFrom() && filter.getDateAvailableFrom() != null) {
+            System.out.println("5");
+            return false;
+        }
+        if (filter.getCountry() != null && !filter.getCountry().equals(room.getHotel().getCountry())) {
+            System.out.println("6");
+            return false;
+        }
+        if (filter.getCity() != null && !filter.getCity().equals(room.getHotel().getCity())) {
+            System.out.println("7");
+            return false;
+        }
+        return true;
+    }
+
     private ArrayList<Room> getRooms() throws Exception {
-        return new ArrayList<>(getObjects(path));
+        return new ArrayList<>(getObjects());
     }
 
     @Override

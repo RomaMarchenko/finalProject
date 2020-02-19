@@ -5,7 +5,7 @@ import lesson35.repository.UserRepository;
 import lesson35.model.User;
 
 public class UserService {
-    private static UserRepository userRepository = new UserRepository();
+    private static UserRepository userRepository = new UserRepository(UserRepository.getPath());
 
     public static User registerUser(User user) throws Exception {
         //check business logic

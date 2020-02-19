@@ -11,7 +11,7 @@ import lesson35.repository.UserRepository;
 import java.util.Collection;
 
 public class RoomService {
-    private static RoomRepository roomRepository = new RoomRepository();
+    private static RoomRepository roomRepository = new RoomRepository(RoomRepository.getPath());
 
     public static Room addRoom(Room room) throws Exception {
         if (checkAdminRights() && checkRoom(room)) {

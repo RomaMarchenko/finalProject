@@ -10,8 +10,13 @@ import java.util.Date;
 import java.util.Random;
 
 public abstract class GeneralRepository {
+    static String path;
 
-    public static <T extends IdEntity> void write(T t, String path) throws IOException {
+    public GeneralRepository(String path) {
+        GeneralRepository.path = path;
+    }
+
+    public <T extends IdEntity> void write(T t) throws IOException {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(path, true))) {
             Random id = new Random();
             t.setId(Math.abs(id.nextLong()));
@@ -20,7 +25,7 @@ public abstract class GeneralRepository {
         }
     }
 
-    public <T> ArrayList<T> getObjects(String path) throws Exception {
+    public <T> ArrayList<T> getObjects() throws Exception {
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             ArrayList<T> objects = new ArrayList<>();
             String object;
@@ -31,7 +36,7 @@ public abstract class GeneralRepository {
         }
     }
 
-    public static void deleteObject(long objectId, String path) {
+    public static void deleteObject(long objectId) {
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String id = String.valueOf(objectId);
             String object;
@@ -50,7 +55,7 @@ public abstract class GeneralRepository {
         }
     }
 
-    public <T extends IdEntity> void updateAll (ArrayList<T> updatedObjects, String path) throws Exception {
+    public <T extends IdEntity> void updateAll (ArrayList<T> updatedObjects) throws Exception {
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(path, false));
         bufferedWriter.append("");
         bufferedWriter.close();

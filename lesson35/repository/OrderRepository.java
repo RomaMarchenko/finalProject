@@ -11,7 +11,15 @@ import java.util.Date;
 public class OrderRepository extends GeneralRepository{
     private static String path = "C:\\Users\\Roma_\\Desktop\\Gromcode Tests\\Final Project\\OrderDb.txt";
 
-    private RoomRepository roomRepository = new RoomRepository();
+    private static RoomRepository roomRepository = new RoomRepository(path);
+
+    public OrderRepository(String path) {
+        super(path);
+    }
+
+    public static String getPath() {
+        return path;
+    }
 
     public Order bookRoom(long roomId, long userId, long hotelId, Date dateFrom, Date dateTo) throws Exception {
         Order order = new Order();
@@ -23,7 +31,7 @@ public class OrderRepository extends GeneralRepository{
             order.setDateFrom(dateFrom);
             order.setDateTo(dateTo);
             order.setMoneyPaid(countOrderPrice(roomId, dateFrom, dateTo));
-            write(order, path);
+            write(order);
             roomRepository.changeDateAvailableFrom(roomId, dateTo);
         }
         return order;
@@ -53,7 +61,7 @@ public class OrderRepository extends GeneralRepository{
     }
 
     private ArrayList<Order> getOrders() throws Exception {
-        return new ArrayList<>(getObjects(path));
+        return new ArrayList<>(getObjects());
     }
 
     private boolean isRoomAvailable(long roomId, long hotelId) throws Exception {

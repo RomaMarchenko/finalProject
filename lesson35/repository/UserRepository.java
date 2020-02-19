@@ -12,7 +12,15 @@ public class UserRepository extends GeneralRepository{
 
     private static String path = "C:\\Users\\Roma_\\Desktop\\Gromcode Tests\\Final Project\\UserDb.txt";
 
-    private static UserRepository userRepository = new UserRepository();
+    private static UserRepository userRepository = new UserRepository(path);
+
+    public UserRepository(String path) {
+        super(path);
+    }
+
+    public static String getPath() {
+        return path;
+    }
 
     public static User getLoggedUser() {
         return loggedUser;
@@ -23,7 +31,7 @@ public class UserRepository extends GeneralRepository{
             throw new BadRequestException("All fields of user must be filled, please check your input again");
         }
         if (checkUserName(user.getUserName())) {
-            write(user, path);
+            write(user);
         }
         return user;
     }
@@ -64,7 +72,7 @@ public class UserRepository extends GeneralRepository{
     }
 
     private ArrayList<User> getUsers() throws Exception {
-        return new ArrayList<>(getObjects(path));
+        return new ArrayList<>(getObjects());
     }
 
     @Override
